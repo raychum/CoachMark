@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, CoachMarkActivity.class);
-                final ArrayList<String> arrayList = new ArrayList<>();
+                final ArrayList<CoachMarkModel> arrayList = new ArrayList<>();
                 int[] position = new int[2];
                 final String[] messages = {"text text text text text",
                         "text text text text text text text text text text",
@@ -32,17 +32,17 @@ public class MainActivity extends AppCompatActivity {
 
                 v = findViewById(R.id.text1);
                 v.getLocationOnScreen(position);
-                arrayList.add(position[0] + ";" + position[1] + ";" + v.getMeasuredWidth() + ";" + v.getMeasuredHeight() + ";" + messages[rand.nextInt(messages.length)]);
+                arrayList.add(new CoachMarkModel(messages[rand.nextInt(messages.length)], position[0], position[1], v.getWidth(), v.getHeight()));
 
                 v = findViewById(R.id.text2);
                 v.getLocationOnScreen(position);
-                arrayList.add(position[0] + ";" + position[1] + ";" + v.getMeasuredWidth() + ";" + v.getMeasuredHeight() + ";" + messages[rand.nextInt(messages.length)]);
+                arrayList.add(new CoachMarkModel(messages[rand.nextInt(messages.length)], position[0], position[1], v.getWidth(), v.getHeight()));
 
                 v = findViewById(R.id.text3);
                 v.getLocationOnScreen(position);
-                arrayList.add(position[0] + ";" + position[1] + ";" + v.getMeasuredWidth() + ";" + v.getMeasuredHeight() + ";" + messages[rand.nextInt(messages.length)]);
+                arrayList.add(new CoachMarkModel(messages[rand.nextInt(messages.length)], position[0], position[1], v.getWidth(), v.getHeight()));
 
-                intent.putStringArrayListExtra("coachMarks", arrayList);
+                intent.putParcelableArrayListExtra("coachMarks", arrayList);
                 startActivity(intent);
             }
         });
