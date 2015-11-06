@@ -50,9 +50,13 @@ public class CoachMarkActivity extends AppCompatActivity {
                 final float y = coachMark.y;
                 final int w = coachMark.width;
                 final int h = coachMark.height;
+                final int indicatorHeight = coachMark.indicatorHeight;
                 final String text = coachMark.message;
                 final RelativeLayout relativeLayout = (RelativeLayout) LayoutInflater.from(getApplicationContext()).inflate(R.layout.view_coach_mark, (ViewGroup) container, false);
                 final ImageView indicator = (ImageView) relativeLayout.findViewById(R.id.indicator);
+                if (indicatorHeight > 0) {
+                    indicator.getLayoutParams().height = indicatorHeight;
+                }
                 final ClipDrawable clipDrawable = (ClipDrawable) indicator.getDrawable();
                 clipDrawable.setLevel(0);
                 final TextView message = (TextView) relativeLayout.findViewById(R.id.message);
@@ -97,14 +101,29 @@ public class CoachMarkActivity extends AppCompatActivity {
                                 message.getViewTreeObserver().removeGlobalOnLayoutListener(this);
                             }
                             if (message.getWidth() != getScreenWidth(getApplicationContext())) {
-                                if (x + w / 2 + message.getWidth() / 2 > getScreenWidth(getApplicationContext())) {
-                                    ((RelativeLayout.LayoutParams) message.getLayoutParams()).addRule(RelativeLayout.ALIGN_PARENT_RIGHT, RelativeLayout.TRUE);
+                                if (x + w / 2 > getScreenWidth(getApplicationContext()) / 2) { // Right
+                                    if (x + w / 2 + message.getWidth() / 2 > getScreenWidth(getApplicationContext())) {
+                                        ((RelativeLayout.LayoutParams) message.getLayoutParams()).addRule(RelativeLayout.ALIGN_PARENT_RIGHT, RelativeLayout.TRUE);
+                                        message.setGravity(GravityCompat.END);
+                                    } else {
+                                        message.setX(x + w / 2 - message.getWidth() / 2);
+                                        message.setGravity(Gravity.CENTER);
+                                    }
+                                } else { // Left
+                                    if (x + w / 2 - message.getWidth() / 2 < 0) {
+                                        ((RelativeLayout.LayoutParams) message.getLayoutParams()).addRule(RelativeLayout.ALIGN_PARENT_LEFT, RelativeLayout.TRUE);
+                                        message.setGravity(GravityCompat.START);
+                                    } else {
+                                        message.setX(x + w / 2 - message.getWidth() / 2);
+                                        message.setGravity(Gravity.CENTER);
+                                    }
+                                }
+                            } else {
+                                if (x + w / 2 > getScreenWidth(getApplicationContext()) / 3 * 2) { // Right
                                     message.setGravity(GravityCompat.END);
-                                } else if (x + w / 2 - message.getWidth() / 2 < 0) {
-                                    ((RelativeLayout.LayoutParams) message.getLayoutParams()).addRule(RelativeLayout.ALIGN_PARENT_LEFT, RelativeLayout.TRUE);
+                                } else if (x + w / 2 < getScreenWidth(getApplicationContext()) / 3) { // Left
                                     message.setGravity(GravityCompat.START);
-                                } else if (x + w / 2 - message.getWidth() / 2 > 0 && x + w / 2 + message.getWidth() / 2 > 0) {
-                                    ((RelativeLayout.LayoutParams) message.getLayoutParams()).addRule(RelativeLayout.CENTER_HORIZONTAL, RelativeLayout.TRUE);
+                                } else {
                                     message.setGravity(Gravity.CENTER);
                                 }
                             }

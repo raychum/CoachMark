@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
 
                 v = findViewById(R.id.text1);
                 v.getLocationOnScreen(position);
-                arrayList.add(new CoachMarkModel(messages[rand.nextInt(messages.length)], position[0], position[1], v.getWidth(), v.getHeight()));
+                arrayList.add(new CoachMarkModel(messages[rand.nextInt(messages.length)], 300, position[0], position[1], v.getWidth(), v.getHeight()));
 
                 v = findViewById(R.id.text2);
                 v.getLocationOnScreen(position);
