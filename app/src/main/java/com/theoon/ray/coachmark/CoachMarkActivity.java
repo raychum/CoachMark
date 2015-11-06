@@ -1,6 +1,10 @@
 package com.theoon.ray.coachmark;
 
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.content.Context;
+import android.graphics.drawable.ClipDrawable;
 import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -10,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -47,8 +52,11 @@ public class CoachMarkActivity extends AppCompatActivity {
                 final int h = coachMark.height;
                 final String text = coachMark.message;
                 final RelativeLayout relativeLayout = (RelativeLayout) LayoutInflater.from(getApplicationContext()).inflate(R.layout.view_coach_mark, (ViewGroup) container, false);
-                final View indicator = relativeLayout.findViewById(R.id.indicator);
+                final ImageView indicator = (ImageView) relativeLayout.findViewById(R.id.indicator);
+                final ClipDrawable clipDrawable = (ClipDrawable) indicator.getDrawable();
+                clipDrawable.setLevel(0);
                 final TextView message = (TextView) relativeLayout.findViewById(R.id.message);
+                message.setAlpha(0);
                 message.setMaxWidth((int) (getScreenWidth(getApplicationContext()) * 0.7) + message.getPaddingRight() + message.getPaddingLeft());
                 message.setText(text);
                 if (y > getScreenHeight(this) / 2) {
@@ -100,6 +108,19 @@ public class CoachMarkActivity extends AppCompatActivity {
                                     message.setGravity(Gravity.CENTER);
                                 }
                             }
+                            final ObjectAnimator mAnimatorAlpha = ObjectAnimator.ofFloat(message, "alpha", 0.0f, 1.0f);
+                            final ValueAnimator mAnimatorAlphaClip = ValueAnimator.ofInt(0, 10000);
+                            mAnimatorAlphaClip.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                                @Override
+                                public void onAnimationUpdate(ValueAnimator animation) {
+                                    clipDrawable.setLevel((Integer) animation.getAnimatedValue());
+                                }
+                            });
+                            final AnimatorSet animatorSet = new AnimatorSet();
+                            animatorSet.playSequentially(mAnimatorAlphaClip, mAnimatorAlpha);
+                            animatorSet.setStartDelay(300);
+                            animatorSet.setDuration(200);
+                            animatorSet.start();
                         }
                     }
                 });
